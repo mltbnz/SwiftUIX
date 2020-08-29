@@ -18,6 +18,10 @@ let package = Package(
             name: "SwiftUIX",
             dependencies: [],
             path: "Sources"
+        ),
+        .testTarget(
+            name: "SwiftUIXTests",
+            dependencies: ["SwiftUIX"]
         )
     ]
 )
