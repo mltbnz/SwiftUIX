@@ -88,7 +88,8 @@ public struct _CocoaTextField: UIViewRepresentable {
     
     public class Coordinator: NSObject, UITextFieldDelegate {
         var base: _CocoaTextField
-        
+        var didBecomeFirstResponder = false
+
         init(base: _CocoaTextField) {
             self.base = base
         }
@@ -129,6 +130,7 @@ public struct _CocoaTextField: UIViewRepresentable {
         if let isFirstResponder = isInitialFirstResponder, isFirstResponder {
             DispatchQueue.main.async {
                 uiView.becomeFirstResponder()
+                context.coordinator.didBecomeFirstResponder = true
             }
         }
         
@@ -196,8 +198,9 @@ public struct _CocoaTextField: UIViewRepresentable {
         
         DispatchQueue.main.async {
             if let isFirstResponder = self.isFirstResponder, uiView.window != nil {
-                if isFirstResponder && !uiView.isFirstResponder {
+                if isFirstResponder, !uiView.isFirstResponder, !context.coordinator.didBecomeFirstResponder {
                     uiView.becomeFirstResponder()
+                    context.coordinator.didBecomeFirstResponder = true
                 } else if !isFirstResponder && uiView.isFirstResponder {
                     uiView.resignFirstResponder()
                 }
